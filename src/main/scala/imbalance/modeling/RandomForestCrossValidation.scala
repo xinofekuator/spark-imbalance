@@ -1,4 +1,4 @@
-package models
+package imbalance.modeling
 
 import org.apache.spark.ml.classification.{RandomForestClassificationModel, RandomForestClassifier}
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator

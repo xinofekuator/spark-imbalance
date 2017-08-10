@@ -88,6 +88,4 @@ class RandomForestCrossValidation(labelIndexer: StringIndexerModel,
   //  val bestHashingTFNumFeatures : String = bestModel.stages(1).asInstanceOf[RandomForestClassificationModel].explainParams
 
   val predictions: DataFrame = modelCV.transform(testData)
-  //TODO: do I need the training error?
-  //  val trainingPredictions : DataFrame = modelCV.transform(trainingData)
 }

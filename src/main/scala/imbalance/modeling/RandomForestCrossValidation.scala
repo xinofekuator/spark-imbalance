@@ -8,6 +8,8 @@ import org.apache.spark.ml.tuning.{CrossValidatorModel, ParamGridBuilder, Strati
 import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.sql.DataFrame
 
+import imbalance.utils.Utils.featuresImportanceOrdered
+
 class RandomForestCrossValidation(labelIndexer: StringIndexerModel,
                                   indexerPipeline: PipelineModel,
                                   trainingData: DataFrame,
@@ -86,6 +88,10 @@ class RandomForestCrossValidation(labelIndexer: StringIndexerModel,
   val bestModel: PipelineModel = modelCV.bestModel.asInstanceOf[PipelineModel]
   val bestRandomForestModel: RandomForestClassificationModel = bestModel.stages(1).asInstanceOf[RandomForestClassificationModel]
   //  val bestHashingTFNumFeatures : String = bestModel.stages(1).asInstanceOf[RandomForestClassificationModel].explainParams
+
+  private lazy val featuresMetadata = indexerPipeline.transform(testData).select("features").schema.fields.head.metadata.json
+  private lazy val featureImportances = bestRandomForestModel.featureImportances
+  val featureImportanceOrdered: Seq[(String, Double)] = featuresImportanceOrdered(featuresMetadata, featureImportances)
 
   val predictions: DataFrame = modelCV.transform(testData)
 }
